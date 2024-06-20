@@ -18,11 +18,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String
+  email String @unique
   hash String
 
   firstName String?
   lastName String?
+
+  @@map("users")
 }
 
 model Book {
@@ -34,5 +36,22 @@ model Book {
   price Float
   imageUrl String?
   description String?
+
+   @@map("books")
 }
 
+model Rental {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int
+  bookId Int
+
+  bookTitle String
+  bookPrice Float
+  bookImageUrl String?
+  bookDescription String?
+
+  @@map("rentals")
+}

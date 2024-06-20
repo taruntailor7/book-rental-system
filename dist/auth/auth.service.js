@@ -12,12 +12,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const argon = require("argon2");
+const library_1 = require("@prisma/client/runtime/library");
 let AuthService = class AuthService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    signup() {
-        return { msg: 'I am signed up' };
+    async signup(dto) {
+        const hash = await argon.hash(dto.password);
+        try {
+            const user = await this.prisma.user.create({
+                data: {
+                    email: dto.email,
+                    hash,
+                },
+            });
+            delete user.hash;
+            return {
+                message: 'User registered successfully!',
+                error: false,
+                user: user,
+            };
+        }
+        catch (error) {
+            if (error instanceof library_1.PrismaClientKnownRequestError) {
+                return {
+                    message: 'User already exist!',
+                    error: true,
+                };
+            }
+            throw error;
+        }
     }
     signin() {
         return { msg: 'I am signed in' };
