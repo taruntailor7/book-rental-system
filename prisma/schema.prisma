@@ -49,9 +49,10 @@ model Rental {
   bookId Int
 
   bookTitle String
-  bookPrice Float
+  bookPrice Int
   bookImageUrl String?
   bookDescription String?
 
   @@map("rentals")
 }
+

@@ -12,12 +12,13 @@ const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./user/user.module");
 const book_module_1 = require("./book/book.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const rental_module_1 = require("./rental/rental.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, user_module_1.UserModule, book_module_1.BookModule, prisma_module_1.PrismaModule],
+        imports: [auth_module_1.AuthModule, user_module_1.UserModule, book_module_1.BookModule, prisma_module_1.PrismaModule, rental_module_1.RentalModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
