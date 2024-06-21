@@ -16,18 +16,45 @@ export class RentalService {
       bookDescription,
     } = rentalData;
 
-    const rental = await this.prisma.rental.create({
-      data: {
-        userId,
-        bookId,
-        bookTitle,
-        bookPrice,
-        bookImageUrl,
-        bookDescription,
-      },
-    });
+    try {
+      // Check if the book has already been rented
+      const existingRental = await this.prisma.rental.findFirst({
+        where: {
+          userId,
+          bookId,
+        },
+      });
 
-    return rental;
+      if (existingRental) {
+        return {
+          error: true,
+          message: 'This book has already been rented.',
+        };
+      }
+
+      // Create a new rental entry
+      const rental = await this.prisma.rental.create({
+        data: {
+          userId,
+          bookId,
+          bookTitle,
+          bookPrice,
+          bookImageUrl,
+          bookDescription,
+        },
+      });
+      return {
+        error: false,
+        message: 'Book rented successfully',
+        rental,
+      };
+    } catch (error) {
+      console.error('Error renting book:', error);
+      return {
+        error: true,
+        message: 'Failed to rent the book. Please try again later.',
+      };
+    }
   }
 
   async getRentalsByUserId(userId: number) {

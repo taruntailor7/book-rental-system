@@ -25,6 +25,8 @@ let AuthService = class AuthService {
                 data: {
                     email: dto.email,
                     hash,
+                    firstName: dto.firstName,
+                    lastName: dto.lastName,
                 },
             });
             delete user.hash;
@@ -51,14 +53,24 @@ let AuthService = class AuthService {
             },
         });
         if (!user) {
-            throw new common_1.ForbiddenException('email does not exist!');
+            return {
+                message: 'Email does not exist!',
+                error: true,
+            };
         }
         const pwMatches = await argon.verify(user.hash, dto.password);
         if (!pwMatches) {
-            throw new common_1.ForbiddenException('Wrong password');
+            return {
+                message: 'Wrong password',
+                error: true,
+            };
         }
         delete user.hash;
-        return user;
+        return {
+            message: 'User signed in successfully!',
+            error: false,
+            user: user,
+        };
     }
 };
 exports.AuthService = AuthService;

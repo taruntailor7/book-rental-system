@@ -21,12 +21,20 @@ export declare class AuthService {
         user?: undefined;
     }>;
     signin(dto: AuthDto): Promise<{
-        id: number;
-        createdAt: Date;
-        updatedAt: Date;
-        email: string;
-        hash: string;
-        firstName: string;
-        lastName: string;
+        message: string;
+        error: boolean;
+        user?: undefined;
+    } | {
+        message: string;
+        error: boolean;
+        user: {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
+            email: string;
+            hash: string;
+            firstName: string;
+            lastName: string;
+        };
     }>;
 }

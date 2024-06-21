@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
@@ -18,6 +18,8 @@ export class AuthService {
         data: {
           email: dto.email,
           hash,
+          firstName: dto.firstName,
+          lastName: dto.lastName,
         },
         // we can select values what we want to send as response.
         // select: {
@@ -53,16 +55,26 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ForbiddenException('email does not exist!');
+      return {
+        message: 'Email does not exist!',
+        error: true,
+      };
     }
 
     const pwMatches = await argon.verify(user.hash, dto.password);
 
     if (!pwMatches) {
-      throw new ForbiddenException('Wrong password');
+      return {
+        message: 'Wrong password',
+        error: true,
+      };
     }
 
     delete user.hash;
-    return user;
+    return {
+      message: 'User signed in successfully!',
+      error: false,
+      user: user,
+    };
   }
 }
